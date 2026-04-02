@@ -1,0 +1,5 @@
+anthropic
+python-dotenv
+requests
+sendgrid
+slack-sdk
