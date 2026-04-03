@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusRide - Smart Carpool for Students</title>
+    <title>CampusRide - Smart University Carpooling</title>
     <style>
         * {
             margin: 0;
@@ -12,24 +12,20 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* Navigation */
         nav {
             position: fixed;
-            width: 100%;
             top: 0;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -38,221 +34,228 @@
 
         .logo {
             font-size: 1.5rem;
-            font-weight: bold;
+            font-weight: 700;
             color: #2563eb;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .nav-button {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .nav-button:hover {
+            background: #1d4ed8;
         }
 
         /* Hero Section */
         .hero {
-            margin-top: 60px;
             background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
             color: white;
-            padding: 6rem 2rem;
+            padding: 8rem 2rem 6rem;
             text-align: center;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
+            margin-top: 4rem;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
             font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
         }
 
         .hero p {
             font-size: 1.25rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             opacity: 0.95;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-button {
             display: inline-block;
-            background: #f59e0b;
-            color: white;
+            background: #fbbf24;
+            color: #1e40af;
             padding: 1rem 2.5rem;
             border-radius: 0.5rem;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             border: none;
             cursor: pointer;
         }
 
         .cta-button:hover {
-            background: #d97706;
+            background: #f59e0b;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        /* Value Props */
-        .value-props {
-            background: #f3f4f6;
+        /* Value Proposition Section */
+        .value-prop {
             padding: 4rem 2rem;
-            margin-top: 3rem;
+            background: #f8fafc;
         }
 
-        .value-props-container {
+        .section-container {
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .value-props h2 {
+        .value-prop h2 {
             font-size: 2rem;
             text-align: center;
-            margin-bottom: 3rem;
-            color: #1f2937;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
         }
 
         .value-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .value-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+
+        .value-text p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .value-benefits {
+            list-style: none;
+        }
+
+        .value-benefits li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: #555;
+        }
+
+        .value-benefits li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .value-visual {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .value-visual svg {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .features h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #1e293b;
+        }
+
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
-        .value-item {
-            background: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-            transition: all 0.3s ease;
-        }
-
-        .value-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.12);
-        }
-
-        .value-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .value-item h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: #1f2937;
-        }
-
-        .value-item p {
-            color: #6b7280;
-            font-size: 0.95rem;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .features h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 4rem;
-            color: #1f2937;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
         .feature-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            padding: 2.5rem;
+            background: #f8fafc;
+            padding: 2rem;
             border-radius: 1rem;
-            transition: all 0.3s ease;
+            border-left: 4px solid #2563eb;
+            transition: all 0.3s;
         }
 
         .feature-card:hover {
-            border-color: #2563eb;
-            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+            transform: translateY(-5px);
         }
 
-        .feature-badge {
-            display: inline-block;
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.85rem;
-            font-weight: 600;
+        .feature-icon {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
         }
 
-        .feature-badge.priority-1 {
-            background: #fef08a;
-            color: #854d0e;
-        }
-
         .feature-card h3 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             margin-bottom: 0.75rem;
-            color: #1f2937;
+            color: #1e293b;
         }
 
         .feature-card p {
-            color: #6b7280;
-            line-height: 1.8;
-        }
-
-        /* User Personas */
-        .personas {
-            background: #1f2937;
-            color: white;
-            padding: 6rem 2rem;
-        }
-
-        .personas-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .personas h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .personas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .persona-card {
-            background: rgba(255,255,255,0.05);
-            padding: 2rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .persona-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #fbbf24;
-        }
-
-        .persona-role {
-            color: #9ca3af;
-            margin-bottom: 1.5rem;
+            color: #666;
+            line-height: 1.6;
             font-size: 0.95rem;
         }
 
-        .persona-card p {
-            color: #e5e7eb;
-            line-height: 1.8;
+        .priority-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
         }
 
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            color: white;
-            padding:
+        /* Personas Section */
+        .personas {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+        }
+
+        .personas h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #1e293b;
