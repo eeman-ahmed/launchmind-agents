@@ -176,10 +176,11 @@ def post_pr_review_comments(pr_url, html_issues, copy_issues):
 
     review_body = "## QA Agent Review\n\n"
     review_body += "### Issues Found:\n"
-    for issue in all_issues:
-        review_body += f"- {issue}\n"
+    for i, issue in enumerate(all_issues):
+        review_body += f"- **Section {i+1}:** {issue}\n"
     review_body += "\n### Recommendation:\n"
-    review_body += "Please address the above issues before merging."
+    review_body += "Please address the above issues before merging.\n"
+    review_body += "\n*Review posted automatically by LaunchMind QA Agent*"
 
     # Post review on PR
     review_r = requests.post(
@@ -193,12 +194,12 @@ def post_pr_review_comments(pr_url, html_issues, copy_issues):
                 {
                     "path": "index.html",
                     "position": 1,
-                    "body": f"🔍 QA Review: {html_issues[0]['comment'] if html_issues else 'Check overall structure'}"
+                      "body": f" QA Review - Hero Section: {html_issues[0]['comment'] if html_issues else 'Verify headline matches value proposition'}"
                 },
                 {
                     "path": "index.html",
                     "position": 2,
-                    "body": f"🔍 QA Review: {html_issues[1]['comment'] if len(html_issues) > 1 else 'Verify CTA button'}"
+                    "body": f" QA Review - Features Section: {html_issues[1]['comment'] if len(html_issues) > 1 else 'Verify all 5 features are listed with descriptions'}"
                 }
             ]
         }
