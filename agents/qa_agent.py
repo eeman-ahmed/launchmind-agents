@@ -226,7 +226,6 @@ def run_qa_agent():
     print(" QA AGENT STARTING")
     print("="*60)
 
-    # Get messages from inbox
     messages = get_messages("qa")
 
     if not messages:
@@ -242,49 +241,66 @@ def run_qa_agent():
     print(f" QA AGENT: Received review task from CEO")
     print(f"   PR to review: {pr_url}")
 
-    # Step 1: Fetch HTML from GitHub
-    html_content = get_html_from_github(pr_url)
+    try:
+        # Step 1: Fetch HTML from GitHub
+        html_content = get_html_from_github(pr_url)
 
-    # Step 2: Review HTML
-    html_review = None
-    if html_content:
-        html_review = review_html(html_content, spec)
+        # Step 2: Review HTML
+        html_review = None
+        if html_content:
+            html_review = review_html(html_content, spec)
 
-    # Step 3: Review marketing copy
-    copy_review = None
-    if marketing_copy:
-        copy_review = review_marketing_copy(marketing_copy)
+        # Step 3: Review marketing copy
+        copy_review = None
+        if marketing_copy:
+            copy_review = review_marketing_copy(marketing_copy)
 
-    # Step 4: Post comments on GitHub PR
-    if html_review and copy_review and pr_url:
-        post_pr_review_comments(
-            pr_url,
-            html_review.get('issues', []),
-            copy_review.get('issues', [])
+        # Step 4: Post comments on GitHub PR
+        if html_review and copy_review and pr_url:
+            post_pr_review_comments(
+                pr_url,
+                html_review.get('issues', []),
+                copy_review.get('issues', [])
+            )
+
+        # Step 5: Determine overall verdict
+        overall_verdict = "pass"
+        if html_review and html_review['verdict'] == 'fail':
+            overall_verdict = "fail"
+        if copy_review and copy_review['verdict'] == 'fail':
+            overall_verdict = "fail"
+
+        print(f"\n QA AGENT: Overall verdict: {overall_verdict.upper()}")
+
+        # Step 6: Send report back to CEO
+        send_message(
+            from_agent="qa",
+            to_agent="ceo",
+            message_type="result",
+            payload={
+                "verdict": overall_verdict,
+                "html_review": html_review,
+                "copy_review": copy_review,
+                "pr_url": pr_url,
+                "message": f"QA review complete. Overall verdict: {overall_verdict}"
+            },
+            parent_message_id=task_message["message_id"]
         )
 
-    # Step 5: Determine overall verdict
-    overall_verdict = "pass"
-    if html_review and html_review['verdict'] == 'fail':
-        overall_verdict = "fail"
-    if copy_review and copy_review['verdict'] == 'fail':
-        overall_verdict = "fail"
+        return overall_verdict
 
-    print(f"\n QA AGENT: Overall verdict: {overall_verdict.upper()}")
-
-    # Step 6: Send report back to CEO
-    send_message(
-        from_agent="qa",
-        to_agent="ceo",
-        message_type="result",
-        payload={
-            "verdict": overall_verdict,
-            "html_review": html_review,
-            "copy_review": copy_review,
-            "pr_url": pr_url,
-            "message": f"QA review complete. Overall verdict: {overall_verdict}"
-        },
-        parent_message_id=task_message["message_id"]
-    )
-
-    return overall_verdict
+    except Exception as e:
+        print(f"\n QA AGENT: Failed with error: {e}")
+        send_message(
+            from_agent="qa",
+            to_agent="ceo",
+            message_type="result",
+            payload={
+                "status": "failed",
+                "verdict": "fail",
+                "error": str(e),
+                "message": "QA agent encountered an error and could not complete the review"
+            },
+            parent_message_id=task_message["message_id"]
+        )
+        return None

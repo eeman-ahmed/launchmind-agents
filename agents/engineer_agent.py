@@ -212,60 +212,70 @@ def run_engineer_agent():
     print(" ENGINEER AGENT STARTING")
     print("="*60)
 
-    # Get messages from inbox
     messages = get_messages("engineer")
 
     if not messages:
         print(" ENGINEER AGENT: No messages found")
         return None
 
-    # Get the product spec from message
     task_message = messages[0]
     spec = task_message["payload"]["spec"]
 
     print(f" ENGINEER AGENT: Received product spec from Product Agent")
     print(f"   Building for: {spec['value_proposition']}")
 
-    # Step 1: Generate HTML using LLM
-    html_content = generate_html(spec)
+    try:
+        # Step 1: Generate HTML
+        html_content = generate_html(spec)
 
-    # Step 2: Get main branch SHA
-    sha = get_main_sha()
+        # Step 2: Get main branch SHA
+        sha = get_main_sha()
 
-    # Step 3: Create new branch
-    branch_name = "agent-landing-page"
-    create_branch(branch_name, sha)
+        # Step 3: Create branch
+        branch_name = "agent-landing-page"
+        create_branch(branch_name, sha)
 
-    # Step 4: Commit HTML file
-    commit_success = commit_file(branch_name, html_content)
+        # Step 4: Commit file
+        commit_success = commit_file(branch_name, html_content)
+        if not commit_success:
+            raise Exception("Failed to commit HTML file to GitHub")
 
-    if not commit_success:
-        print(" ENGINEER AGENT: Failed to commit file")
-        return None
+        # Step 5: Create issue
+        issue_url = create_github_issue(spec)
 
-    # Step 5: Create GitHub issue
-    issue_url = create_github_issue(spec)
+        # Step 6: Open PR
+        pr_url = open_pull_request(branch_name, spec)
 
-    # Step 6: Open pull request
-    pr_url = open_pull_request(branch_name, spec)
+        if pr_url:
+            send_message(
+                from_agent="engineer",
+                to_agent="ceo",
+                message_type="result",
+                payload={
+                    "status": "completed",
+                    "pr_url": pr_url,
+                    "issue_url": issue_url,
+                    "branch": branch_name,
+                    "message": "Landing page built and PR opened"
+                },
+                parent_message_id=task_message["message_id"]
+            )
+            print(f"\n ENGINEER AGENT: All done!")
+            print(f"   PR: {pr_url}")
+            return pr_url
 
-    if pr_url:
-        # Send results back to CEO
+    except Exception as e:
+        # Graceful failure — report to CEO instead of crashing
+        print(f"\n ENGINEER AGENT: Failed with error: {e}")
         send_message(
             from_agent="engineer",
             to_agent="ceo",
             message_type="result",
             payload={
-                "status": "completed",
-                "pr_url": pr_url,
-                "issue_url": issue_url,
-                "branch": branch_name,
-                "message": "Landing page built and PR opened"
+                "status": "failed",
+                "error": str(e),
+                "message": "Engineer agent encountered an error and could not complete the task"
             },
             parent_message_id=task_message["message_id"]
         )
-        print(f"\n ENGINEER AGENT: All done!")
-        print(f"   PR: {pr_url}")
-        print(f"   Issue: {issue_url}")
-
-    return pr_url
+        return None

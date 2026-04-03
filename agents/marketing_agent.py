@@ -193,47 +193,60 @@ def run_marketing_agent(pr_url=None):
     print(" MARKETING AGENT STARTING")
     print("="*60)
 
-    # Get messages from inbox
     messages = get_messages("marketing")
 
     if not messages:
         print(" MARKETING AGENT: No messages found")
         return None
 
-    # Get product spec from message
     task_message = messages[0]
     spec = task_message["payload"]["spec"]
 
     print(f" MARKETING AGENT: Received product spec")
     print(f"   Product: {spec['value_proposition']}")
 
-    # Step 1: Generate all marketing copy using LLM
-    copy = generate_marketing_copy(spec)
+    try:
+        # Step 1: Generate all marketing copy using LLM
+        copy = generate_marketing_copy(spec)
 
-    # Step 2: Send email
-    send_email(copy, spec)
+        # Step 2: Send email
+        send_email(copy, spec)
 
-    # Step 3: Post to Slack (needs PR url)
-    if not pr_url:
-        pr_url = "https://github.com/eeman-ahmed/launchmind-agents/pull/2"
+        # Step 3: Post to Slack
+        if not pr_url:
+            pr_url = "https://github.com/eeman-ahmed/launchmind-agents/pull/2"
+        post_to_slack(copy, pr_url)
 
-    post_to_slack(copy, pr_url)
+        # Step 4: Send results back to CEO
+        send_message(
+            from_agent="marketing",
+            to_agent="ceo",
+            message_type="result",
+            payload={
+                "status": "completed",
+                "tagline": copy['tagline'],
+                "copy": copy,
+                "email_sent": True,
+                "slack_posted": True
+            },
+            parent_message_id=task_message["message_id"]
+        )
 
-    # Step 4: Send results back to CEO
-    send_message(
-        from_agent="marketing",
-        to_agent="ceo",
-        message_type="result",
-        payload={
-            "status": "completed",
-            "tagline": copy['tagline'],
-            "copy": copy,
-            "email_sent": True,
-            "slack_posted": True
-        },
-        parent_message_id=task_message["message_id"]
-    )
+        print("\n MARKETING AGENT: All done!")
+        print(f"   Tagline: {copy['tagline']}")
+        return copy
 
-    print("\n MARKETING AGENT: All done!")
-    print(f"   Tagline: {copy['tagline']}")
-    return copy
+    except Exception as e:
+        print(f"\n MARKETING AGENT: Failed with error: {e}")
+        send_message(
+            from_agent="marketing",
+            to_agent="ceo",
+            message_type="result",
+            payload={
+                "status": "failed",
+                "error": str(e),
+                "message": "Marketing agent encountered an error and could not complete the task"
+            },
+            parent_message_id=task_message["message_id"]
+        )
+        return None
