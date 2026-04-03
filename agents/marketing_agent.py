@@ -36,6 +36,10 @@ def generate_marketing_copy(spec):
     - Use the actual product name from the value proposition
     - Sign the email as "The CampusRide Team"
     - For any links, use: campusride.app
+    - Use only ONE specific savings claim throughout: "$200/month"
+    - Do not use percentage claims like "75% reduction"
+    - Make the email CTA direct and urgent: "Sign up free today at campusride.app"
+    - Keep Instagram to maximum 3 emojis total
     
     Respond ONLY with a JSON object in this exact format, nothing else:
     {
