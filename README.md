@@ -54,8 +54,9 @@ Feedback Loop 2: QA reviews HTML and copy, CEO sends revision_request to Enginee
 
 - GitHub PR: https://github.com/eeman-ahmed/launchmind-agents/pull/2
 - GitHub Issues: Created by Engineer agent on every run
-- Slack: Messages visible in #launches channel
-- Email: Sent to test inbox via SendGrid
+- Slack Workspace: https://join.slack.com/t/launchmind-group/shared_invite/zt-3ue9snx41-ue7EPHgvEgbBbtFahiSxIQ
+- Slack Channel: #launches (bot posts launch announcements and CEO summary)
+- Email: Sent to test inbox via SendGrid on every run
 
 ---
 
