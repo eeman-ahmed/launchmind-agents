@@ -101,24 +101,39 @@ def commit_file(branch_name, html_content):
     """Commit the HTML file to the branch"""
     print(f"\n ENGINEER AGENT: Committing HTML file to GitHub...")
 
-    # Convert HTML to base64 (GitHub API requires this)
     content_base64 = base64.b64encode(html_content.encode()).decode()
+
+    # Check if file already exists on this branch
+    existing_sha = None
+    check = requests.get(
+        f"https://api.github.com/repos/{GITHUB_REPO}/contents/index.html",
+        headers=HEADERS,
+        params={"ref": branch_name}
+    )
+    if check.status_code == 200:
+        existing_sha = check.json()['sha']
+        print("   File exists, updating it...")
+
+    payload = {
+        "message": "Add CampusRide landing page",
+        "content": content_base64,
+        "branch": branch_name,
+        "author": {
+            "name": "EngineerAgent",
+            "email": "agent@campusride.ai"
+        }
+    }
+
+    if existing_sha:
+        payload["sha"] = existing_sha
 
     r = requests.put(
         f"https://api.github.com/repos/{GITHUB_REPO}/contents/index.html",
         headers=HEADERS,
-        json={
-            "message": "Add CampusRide landing page",
-            "content": content_base64,
-            "branch": branch_name,
-            "author": {
-                "name": "EngineerAgent",
-                "email": "agent@campusride.ai"
-            }
-        }
+        json=payload
     )
 
-    if r.status_code == 201:
+    if r.status_code in [200, 201]:
         print(" ENGINEER AGENT: File committed successfully")
         return True
     else:
@@ -153,8 +168,19 @@ def create_github_issue(spec):
         return None
 
 def open_pull_request(branch_name, spec):
-    """Open a pull request on GitHub"""
+    """Open a pull request on GitHub, or return existing one"""
     print("\n ENGINEER AGENT: Opening pull request...")
+
+    # Check if PR already exists
+    existing = requests.get(
+        f"https://api.github.com/repos/{GITHUB_REPO}/pulls",
+        headers=HEADERS,
+        params={"head": f"eeman-ahmed:{branch_name}", "state": "open"}
+    )
+    if existing.status_code == 200 and len(existing.json()) > 0:
+        pr_url = existing.json()[0]['html_url']
+        print(f" ENGINEER AGENT: PR already exists: {pr_url}")
+        return pr_url
 
     pr_body = call_llm(
         "You are a software engineer writing a pull request description. Be concise.",
