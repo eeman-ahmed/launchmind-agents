@@ -103,7 +103,7 @@ slack_client.chat_postMessage(
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Startup:* CampusRide\n*Status:* All agents completed successfully\n*QA Verdict:* {qa_verdict.upper()}"
+                "text": f"*Startup:* CampusRide\n*Status:* All agents completed\n*QA Verdict:* {qa_verdict.upper()} — Revision request sent to Engineer"
             }
         },
         {
