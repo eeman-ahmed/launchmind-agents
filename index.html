@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusRide - Share Rides, Split Costs, Save the Planet</title>
+    <title>CampusRide - Smart Carpooling for Students</title>
     <style>
         * {
             margin: 0;
@@ -13,22 +13,21 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
             line-height: 1.6;
+            color: #333;
         }
 
         header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px 0;
-            position: fixed;
-            width: 100%;
+            position: sticky;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header-container {
+        nav {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -40,17 +39,12 @@
         .logo {
             font-size: 28px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            letter-spacing: -0.5px;
         }
 
-        .logo-icon {
-            font-size: 32px;
-        }
-
-        nav {
+        nav ul {
             display: flex;
+            list-style: none;
             gap: 30px;
         }
 
@@ -68,217 +62,206 @@
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 140px 20px 100px;
+            padding: 100px 20px;
             text-align: center;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hero-container {
-            max-width: 900px;
+        .hero-content {
+            max-width: 800px;
             margin: 0 auto;
         }
 
         h1 {
             font-size: 56px;
-            font-weight: 700;
             margin-bottom: 20px;
+            font-weight: 700;
             line-height: 1.2;
         }
 
         .subheadline {
-            font-size: 22px;
+            font-size: 24px;
             margin-bottom: 40px;
             opacity: 0.95;
             font-weight: 300;
         }
 
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 16px 40px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
+        .cta-button {
             display: inline-block;
-        }
-
-        .btn-primary {
             background: white;
             color: #667eea;
+            padding: 16px 48px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
-        .btn-secondary {
-            background: rgba(255,255,255,0.2);
+        .secondary-cta {
+            margin-left: 20px;
+            background: transparent;
             color: white;
             border: 2px solid white;
+            box-shadow: none;
         }
 
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .secondary-cta:hover {
+            background: rgba(255,255,255,0.1);
         }
 
         section {
-            padding: 80px 20px;
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        section h2 {
-            font-size: 42px;
-            margin-bottom: 50px;
+        h2 {
+            font-size: 44px;
+            margin-bottom: 60px;
             text-align: center;
             color: #333;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
         .feature-card {
-            background: #f8f9fa;
-            padding: 30px;
+            background: white;
+            padding: 40px;
             border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             transition: all 0.3s;
             border-left: 4px solid #667eea;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
         }
 
         .feature-card h3 {
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 15px;
-            color: #667eea;
+            color: #333;
         }
 
         .feature-card p {
             color: #666;
+            font-size: 15px;
             line-height: 1.8;
-            font-size: 14px;
         }
 
-        .benefits {
-            background: #f8f9fa;
+        .priority-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-right: 10px;
         }
 
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+        .priority-1 {
+            background: #667eea;
         }
 
-        .benefit-item {
-            text-align: center;
+        .priority-2 {
+            background: #764ba2;
         }
 
-        .benefit-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .benefit-item h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .benefit-item p {
-            color: #666;
-            font-size: 14px;
+        .priority-3 {
+            background: #999;
         }
 
         .personas {
-            background: white;
+            background: #f9f9f9;
+            padding: 100px 20px;
         }
 
         .personas-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 40px;
-            margin-top: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .persona-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: white;
             padding: 40px;
             border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             text-align: center;
         }
 
         .persona-avatar {
-            font-size: 64px;
-            margin-bottom: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
         }
 
         .persona-card h3 {
-            font-size: 22px;
-            margin-bottom: 5px;
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
         }
 
         .persona-role {
+            color: #667eea;
+            font-weight: 600;
             font-size: 14px;
-            opacity: 0.9;
             margin-bottom: 20px;
-            font-weight: 500;
         }
 
-        .persona-card p {
-            font-size: 14px;
+        .persona-pain {
+            color: #666;
+            font-size: 15px;
             line-height: 1.8;
-            opacity: 0.95;
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .cta-section h2 {
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .cta-section p {
-            font-size: 18px;
-            margin-bottom: 40px;
-            opacity: 0.95;
-        }
-
-        footer {
-            background: #2d3748;
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            font-size: 14px;
+            font-style: italic;
         }
 
         .stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns:
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-
