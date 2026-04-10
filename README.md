@@ -1,3 +1,7 @@
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
+![Claude](https://img.shields.io/badge/Claude-Haiku-orange?logo=anthropic)
+![GitHub API](https://img.shields.io/badge/GitHub-API-black?logo=github)
+![Slack](https://img.shields.io/badge/Slack-Bot-purple?logo=slack)
 # LaunchMind — Multi-Agent Startup System
 
 A Multi-Agent System (MAS) that autonomously runs a micro-startup from idea to execution. Built for FAST NUCES Agentic AI Assignment.
